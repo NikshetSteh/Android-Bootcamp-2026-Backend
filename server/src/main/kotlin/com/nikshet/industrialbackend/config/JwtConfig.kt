@@ -10,9 +10,9 @@ class JwtConfig {
 
     @Bean
     fun tokensProvider(
-        @Value("\${jwt.secret}") secret: String,
-        @Value("\${jwt.access-token.expiration-ms:604800000}") accessTokenExpirationMs: Long,
-        @Value("\${jwt.refresh-token.expiration-ms:2592000000}") refreshTokenExpirationMs: Long
+        @Value($$"${jwt.secret}") secret: String,
+        @Value($$"${jwt.access-token.expiration-ms:604800000}") accessTokenExpirationMs: Long,
+        @Value($$"${jwt.refresh-token.expiration-ms:2592000000}") refreshTokenExpirationMs: Long
     ): JwtTokensProvider {
         return JwtTokensProvider(
             secret = secret,

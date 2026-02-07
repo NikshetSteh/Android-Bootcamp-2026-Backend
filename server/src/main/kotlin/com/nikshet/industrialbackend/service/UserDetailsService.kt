@@ -1,6 +1,5 @@
 package com.nikshet.industrialbackend.service
 
-import com.nikshet.industrialbackend.domain.UserInfoEntity
 import com.nikshet.industrialbackend.repository.UsersRepository
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails

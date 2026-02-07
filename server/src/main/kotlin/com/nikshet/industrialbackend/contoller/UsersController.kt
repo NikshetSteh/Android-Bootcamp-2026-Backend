@@ -1,8 +1,10 @@
 package com.nikshet.industrialbackend.contoller
 
+import com.nikshet.industrialbackend.domain.TokensEntity
 import com.nikshet.industrialbackend.dto.request.UpdateProfileRequest
 import com.nikshet.industrialbackend.dto.request.UserRegistrationRequest
 import com.nikshet.industrialbackend.dto.response.UserInfoResponse
+import com.nikshet.industrialbackend.providers.JwtTokensProvider
 import com.nikshet.industrialbackend.service.UsersService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -18,18 +20,25 @@ import java.util.UUID
 @RestController
 @RequestMapping("/users")
 class UsersController(
-    private val usersService: UsersService
+    private val usersService: UsersService,
+    private val tokensProvider: JwtTokensProvider
 ) {
-
     @PostMapping("/registration")
-    fun registerUser(@Valid @RequestBody request: UserRegistrationRequest): ResponseEntity<UserInfoResponse> {
+    fun registerUser(@Valid @RequestBody request: UserRegistrationRequest): ResponseEntity<TokensEntity> {
         val user = usersService.registerUser(
             phoneNumber = request.phoneNumber,
             fullName = request.fullName,
             department = request.department,
             password = request.password
         )
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserInfoResponse.from(user))
+
+        val payload: Map<Any, Any> = mapOf(
+            "sub" to user.id.toString(),
+            "phone" to user.phoneNumber
+        )
+
+        val tokens = tokensProvider.generateTokensPairs(payload)
+        return ResponseEntity.status(HttpStatus.CREATED).body(tokens)
     }
 
     @PutMapping("/profile")

@@ -26,7 +26,6 @@ class UserIdArgumentResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): UUID? {
-        print("ASDASD")
         val authHeader = webRequest.getHeader("Authorization")
         if (authHeader?.startsWith("Bearer ") == true) {
             val token = authHeader.substring(7)

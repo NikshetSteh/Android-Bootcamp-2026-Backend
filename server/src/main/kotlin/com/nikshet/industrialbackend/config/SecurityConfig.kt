@@ -18,19 +18,19 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .csrf { it.disable() } // Stateless API → no CSRF protection needed
+            .csrf { it.disable() }
             .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // No sessions
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests { authorize ->
                 authorize
                     .requestMatchers("/auth/login", "/users/registration").permitAll()
-                    .anyRequest().authenticated() // All other endpoints require valid JWT
+                    .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
-            .httpBasic { it.disable() }   // Not used
-            .formLogin { it.disable() }   // Not used
-            .logout { it.disable() }      // Not used
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .logout { it.disable() }
 
         return http.build()
     }

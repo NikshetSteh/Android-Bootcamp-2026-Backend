@@ -66,17 +66,4 @@ class JwtTokensProvider(
             null
         }
     }
-
-    fun validateToken(token: String): Boolean {
-        return try {
-            Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
 }

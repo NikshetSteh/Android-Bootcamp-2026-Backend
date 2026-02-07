@@ -2,7 +2,7 @@ package com.nikshet.industrialbackend.service
 
 import com.nikshet.industrialbackend.dto.request.UpdateProfileRequest
 import com.nikshet.industrialbackend.entity.UserEntity
-import com.nikshet.industrialbackend.exception.PhoneAlreadyUsedError
+import com.nikshet.industrialbackend.exception.PhoneAlreadyUsedException
 import com.nikshet.industrialbackend.repository.UsersRepository
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -20,7 +20,7 @@ class UsersService(
         password: String
     ): UserEntity {
         if (usersRepository.findByPhoneNumber(phoneNumber) != null) {
-            throw PhoneAlreadyUsedError()
+            throw PhoneAlreadyUsedException()
         }
 
         val passwordHash = passwordService.hashPassword(password)
@@ -42,9 +42,6 @@ class UsersService(
         val isPasswordValid = passwordService.verifyPassword(rawPassword, user.passwordHash)
         return if (isPasswordValid) user else null
     }
-
-    fun findByPhoneNumber(phoneNumber: String): UserEntity? =
-        usersRepository.findByPhoneNumber(phoneNumber)
 
     fun updateUserProfile(userId: UUID, request: UpdateProfileRequest): UserEntity {
         val user = usersRepository.findById(userId)

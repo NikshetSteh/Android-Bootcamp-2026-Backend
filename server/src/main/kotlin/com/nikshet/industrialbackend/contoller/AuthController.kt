@@ -1,7 +1,8 @@
 package com.nikshet.industrialbackend.contoller
 
+import com.nikshet.industrialbackend.domain.TokensEntity
 import com.nikshet.industrialbackend.dto.request.LoginRequest
-import com.nikshet.industrialbackend.dto.response.ErrorResponse
+import com.nikshet.industrialbackend.exception.InvalidLoginOrPasswordException
 import com.nikshet.industrialbackend.providers.JwtTokensProvider
 import com.nikshet.industrialbackend.service.UsersService
 import jakarta.validation.Valid
@@ -19,11 +20,9 @@ class AuthController(
 ) {
 
     @PostMapping("/login")
-    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<*> {
+    fun login(@Valid @RequestBody request: LoginRequest): ResponseEntity<TokensEntity> {
         val user = usersService.authenticate(request.phoneNumber, request.password)
-            ?: return ResponseEntity
-                .status(401)
-                .body(ErrorResponse("Invalid phone number or password"))
+            ?: throw InvalidLoginOrPasswordException()
 
         val payload: Map<Any, Any> = mapOf(
             "sub" to user.id.toString(),

@@ -1,3 +1,0 @@
-package com.nikshet.industrialbackend.annotation
-
-annotation class AuthenticationPrincipal
