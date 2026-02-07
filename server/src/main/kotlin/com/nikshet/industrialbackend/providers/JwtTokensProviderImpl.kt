@@ -1,10 +1,12 @@
 package com.nikshet.industrialbackend.providers
 
 import com.nikshet.industrialbackend.domain.TokensEntity
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import java.nio.charset.StandardCharsets
 import java.util.Date
+import java.util.UUID
 import javax.crypto.SecretKey
 import kotlin.collections.mapKeys
 import kotlin.text.toByteArray
@@ -14,7 +16,6 @@ class JwtTokensProvider(
     private val accessTokenExpirationMs: Long,
     private val refreshTokenExpirationMs: Long,
 ) {
-
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(
         secret.toByteArray(StandardCharsets.UTF_8)
     )
@@ -52,4 +53,30 @@ class JwtTokensProvider(
             refreshTokenExpiresIn = refreshTokenExpirationMs / 1000,
         )
     }
+
+    fun getUserIdFromToken(token: String): UUID? {
+        return try {
+            val claims: Claims = Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+            UUID.fromString(claims.subject)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun validateToken(token: String): Boolean {
+        return try {
+            Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }

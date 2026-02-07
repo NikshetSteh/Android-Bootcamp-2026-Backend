@@ -1,9 +1,11 @@
 package com.nikshet.industrialbackend.service
 
+import com.nikshet.industrialbackend.dto.request.UpdateProfileRequest
 import com.nikshet.industrialbackend.entity.UserEntity
 import com.nikshet.industrialbackend.exception.PhoneAlreadyUsedError
 import com.nikshet.industrialbackend.repository.UsersRepository
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 
 @Service
@@ -43,4 +45,14 @@ class UsersService(
 
     fun findByPhoneNumber(phoneNumber: String): UserEntity? =
         usersRepository.findByPhoneNumber(phoneNumber)
+
+    fun updateUserProfile(userId: UUID, request: UpdateProfileRequest): UserEntity {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        user.fullName = request.fullName
+        user.department = request.department
+
+        return usersRepository.save(user)
+    }
 }

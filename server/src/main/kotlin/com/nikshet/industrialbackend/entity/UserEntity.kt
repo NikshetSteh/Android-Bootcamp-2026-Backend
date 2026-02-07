@@ -6,7 +6,6 @@ import java.util.*
 @Entity
 @Table(name = "users")
 data class UserEntity(
-
     @Id
     val id: UUID = UUID.randomUUID(),
 
@@ -14,10 +13,10 @@ data class UserEntity(
     val phoneNumber: String,
 
     @Column(name = "full_name", nullable = false)
-    val fullName: String,
+    var fullName: String,
 
     @Column(nullable = false)
-    val department: String,
+    var department: String,
 
     @Column(name = "password_hash", nullable = false)
     val passwordHash: String,
