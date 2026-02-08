@@ -57,4 +57,11 @@ class UsersController(
 
         return ResponseEntity.ok(UserInfoResponse.from(user))
     }
+
+    @GetMapping
+    fun getUsers(): ResponseEntity<List<UserInfoResponse>> {
+        val users = usersService.getAllUsers()
+
+        return ResponseEntity.ok(users.map { UserInfoResponse.from(it) })
+    }
 }

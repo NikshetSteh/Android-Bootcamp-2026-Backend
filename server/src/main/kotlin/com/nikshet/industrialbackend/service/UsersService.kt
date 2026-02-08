@@ -60,4 +60,8 @@ class UsersService(
 
         return user
     }
+
+    fun getAllUsers(): List<UserEntity> {
+        return usersRepository.findAll()
+    }
 }
