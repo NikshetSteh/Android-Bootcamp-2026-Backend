@@ -5,6 +5,7 @@ import com.nikshet.industrialbackend.entity.UserEntity
 import com.nikshet.industrialbackend.exception.PhoneAlreadyUsedException
 import com.nikshet.industrialbackend.repository.UsersRepository
 import org.springframework.stereotype.Service
+import java.util.Optional
 import java.util.UUID
 
 
@@ -51,5 +52,12 @@ class UsersService(
         user.department = request.department
 
         return usersRepository.save(user)
+    }
+
+    fun getUserById(userId: UUID): UserEntity {
+        val user = usersRepository.findById(userId)
+            .orElseThrow { IllegalArgumentException("User not found") }
+
+        return user
     }
 }

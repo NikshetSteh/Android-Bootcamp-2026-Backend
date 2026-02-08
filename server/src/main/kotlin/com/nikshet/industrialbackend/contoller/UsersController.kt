@@ -10,6 +10,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -48,5 +49,12 @@ class UsersController(
     ): ResponseEntity<UserInfoResponse> {
         val updatedUser = usersService.updateUserProfile(userId, request)
         return ResponseEntity.ok(UserInfoResponse.from(updatedUser))
+    }
+
+    @GetMapping("/me")
+    fun getProfile(@AuthenticationPrincipal userId: UUID): ResponseEntity<UserInfoResponse> {
+        val user = usersService.getUserById(userId)
+
+        return ResponseEntity.ok(UserInfoResponse.from(user))
     }
 }
